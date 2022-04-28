@@ -1,15 +1,20 @@
-function obtenerComprobanteFirmado_sri(ruta_certificado, pwd_p12, ruta_respuesta, ruta_factura) {
+function obtenerComprobanteFirmado_sri(ruta_certificado, pwd_p12, ruta_respuesta, ruta_factura, token) {
     // alert("enviando al SRI")
     var response = [];
     $.ajax({
-        url: "src/leerFactura.php",
+        url: "http://localhost/VT/APIVTPROYECTOS/libreria_2021/src/leerFactura.php",
         type: 'POST',
         data: {
-                  'ruta_factura': ruta_factura
+                  'ruta_factura': ruta_factura, 'token' : token
                },
         context: document.body
     }).done(function (respuesta) {
+        respuesta = respuesta.data.text;
+        
 
+        console.log(respuesta);
+
+        
         window.contenido_comprobante = respuesta;
 		
         var oReq = new XMLHttpRequest();
@@ -25,16 +30,20 @@ function obtenerComprobanteFirmado_sri(ruta_certificado, pwd_p12, ruta_respuesta
 			
             var comprobanteFirmado_xml = firmarComprobante(window.contenido_p12[0],
                     pwd_p12,
-                    window.contenido_comprobante);
+                    window.contenido_comprobante,token);
+            
+                    // console.log(comprobanteFirmado_xml);
 
             $.ajax({
-                url: "src/firma.php",
+                url: "http://localhost/VT/APIVTPROYECTOS/libreria_2021/src/firma.php",
                 type: 'POST',
                 data: {
-                    'mensaje': comprobanteFirmado_xml
+                    'mensaje': comprobanteFirmado_xml, 'token' : token
                 },
                 context: document.body
             }).done(function (respuesta) {
+
+                console.log(respuesta);
 
                 service = 'Validar Comprobante';
                 xmlDoc = $.parseXML(window.contenido_comprobante),
@@ -42,31 +51,36 @@ function obtenerComprobanteFirmado_sri(ruta_certificado, pwd_p12, ruta_respuesta
                         $claveAcceso = $xml.find("claveAcceso");
                 $.ajax({
                     type: 'POST',
-                    url: "src/services/validarComprobante.php",
+                    url: "http://localhost/VT/APIVTPROYECTOS/libreria_2021/src/services/validarComprobante.php",
                     data: {
-                        'service': service, 'claveAcceso': $claveAcceso.text()
+                        'service': service, 'claveAcceso': $claveAcceso.text(), 'token' : token
                     },
                     context: document.body
                 }).done(function (respuestaValidarComprobante) {
 
+
+                    console.log(respuestaValidarComprobante);
                     
                     respuesta = decodeURIComponent(respuestaValidarComprobante);
                     respuesta = respuesta.toString();
+                    console.log(respuesta);
                     var validar_comprobante = respuestaValidarComprobante;
                 
                     if (/RECIBIDA/i.test(respuesta) || /CLAVE ACCESO REGISTRADA/i.test(respuesta)) {
+                        console.log('comprobante autorizado');
                         service = 'Autorizacion Comprobante';
                         xmlDoc = $.parseXML(window.contenido_comprobante),
                                 $xml = $(xmlDoc),
                                 $claveAcceso = $xml.find("claveAcceso");
                         $.ajax({
                             type: 'POST',
-                            url: "src/services/autorizacionComprobante.php",
+                            url: "http://localhost/VT/APIVTPROYECTOS/libreria_2021/src/services/autorizacionComprobante.php",
                             data: {
-                                'service': service, 'claveAcceso': $claveAcceso.text()
+                                'service': service, 'claveAcceso': $claveAcceso.text(), 'token' : token
                             },
                             context: document.body
                         }).done(function (respuestaAutorizacionComprobante) {
+                            console.log(respuestaAutorizacionComprobante);
                             
                             var autorizacion_comprobante = respuestaAutorizacionComprobante;
                             response[0] = validar_comprobante;
@@ -78,6 +92,8 @@ function obtenerComprobanteFirmado_sri(ruta_certificado, pwd_p12, ruta_respuesta
                                 context: document.body
                             }).done(function (respuesta) {
                                 //Respuesta enviada
+                                console.log(respuesta);
+
                             });
 
                         });
@@ -90,9 +106,11 @@ function obtenerComprobanteFirmado_sri(ruta_certificado, pwd_p12, ruta_respuesta
                             context: document.body
                         }).done(function (respuesta) {
                             //Respuesta enviada
+
+                            console.log(respuesta);
                         });
                     }
-
+                    console.log(validar_comprobante);
                     // aqui puedes cambiar la respuesta que me devuelve el sri
                     // alert("Comprobante autorizado")
                 });
@@ -129,10 +147,10 @@ function fechas_certificado(ruta_certificado, mi_pwd_p12, ruta_respuesta) {
 
         $.ajax({
             type: 'POST',
-            url: "src/validarFechaCertificado.php",
+            url: "http://localhost/VT/APIVTPROYECTOS/libreria_2021/src/validarFechaCertificado.php",
             data: {
                 'fechaInicio': fechaInicio,
-                'fechaFin': fechaFin
+                'fechaFin': fechaFin, 'token' : token
             },
             context: document.body
         }).done(function (respuesta) {
@@ -201,7 +219,7 @@ function validar_pwrd(ruta_certificado, mi_pwd_p12, ruta_respuesta) {
 
 var contenido_p12 = null;
 
-function firmarComprobante(mi_contenido_p12, mi_pwd_p12, comprobante) {
+function firmarComprobante(mi_contenido_p12, mi_pwd_p12, comprobante,token) {
 
 
     var arrayUint8 = new Uint8Array(mi_contenido_p12);
@@ -217,7 +235,7 @@ function firmarComprobante(mi_contenido_p12, mi_pwd_p12, comprobante) {
     var count = 0;
     var positionSignature = 0;
     var entidad = signaturesQuantity[0].attributes.friendlyName[0];
-    // console.log('prueba')
+    console.log('prueba')
     console.log(certBags)
     if (/BANCO CENTRAL/i.test(entidad)) {
         entidad = 'BANCO_CENTRAL';
@@ -282,14 +300,14 @@ function firmarComprobante(mi_contenido_p12, mi_pwd_p12, comprobante) {
 
     $.ajax({
         type: 'POST',
-        url: "src/validarFechaCertificado.php",
+        url: "http://localhost/VT/APIVTPROYECTOS/libreria_2021/src/validarFechaCertificado.php",
         data: {
             'fechaInicio': fechaInicio,
-            'fechaFin': fechaFin
+            'fechaFin': fechaFin, 'token' : token
         },
         context: document.body
     }).done(function (respuesta) {
-
+        console.log(respuesta);
     });
 
     var pkcs8bags = p12.getBags({bagType: forge.pki.oids.pkcs8ShroudedKeyBag});
