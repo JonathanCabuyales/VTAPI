@@ -58,6 +58,7 @@ try {
 
     $data_insert=array(
         "data" => $res,
+        'data' => $data,
         "status" => "success",
         "message" => "Request authorized"
     );  

@@ -48,7 +48,7 @@ $prestamo_quirografario = $jsonSueldo->prestamo_quirografario;
 $otrosegresos = $jsonSueldo->otrosegresos;
 $total_egresos = $jsonSueldo->total_egresos;
 $neto_recibir = $jsonSueldo->neto_recibir;
-$descripcion = $jsonSueldo->descripcion;
+// $descripcion = $jsonSueldo->descripcion;
 $contrato = $jsonSueldo->contrato;
 $actafiniquito = $jsonSueldo->actafiniquito;
 $mes_rol = $jsonSueldo->mes_rol;
@@ -87,13 +87,12 @@ try {
                 otrosegresos, 
                 total_egresos, 
                 neto_recibir, 
-                contrato, 
-                descripcion, 
+                contrato,
                 actafiniquito, 
                 mes_rol) 
 VALUES ('$id_usuario', '$sueldo', '$diastrabajados', '$horasextras', '$calculo_horas', '$tipohoras','$bonostransporte', '$bonosalimentacion', '$otrosingresos','$decimotercer', '$decimocuarto', '$totalingresos', 
 '$iessindividual', '$iesspatronal', '$iesstotal', '$anticipos', '$prestamos_oficina', '$prestamo_hipotecario', '$prestamo_quirografario',
-'$otrosegresos','$total_egresos','$neto_recibir','$contrato', '$descripcion', '$actafiniquito', '$mes_rol')";
+'$otrosegresos','$total_egresos','$neto_recibir','$contrato', '$actafiniquito', '$mes_rol')";
 
 $insert = mysqli_query($con, $query);
 
