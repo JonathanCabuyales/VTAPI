@@ -36,7 +36,8 @@ try{
                 'status' => 'ok',
                 'message' => 'autorizado',
                 'code' => 200
-            )
+            ),
+            JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE
             );
     }
 }
@@ -47,6 +48,7 @@ catch(Exception $e){
             'code' => 500,
             'status' => 'no autorizado'
 
-        )
+        ),
+        JSON_UNESCAPED_UNICODE  |JSON_INVALID_UTF8_IGNORE
         );
 }

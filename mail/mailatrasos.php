@@ -145,14 +145,14 @@ try {
           <div class='mensaje'>
             <h3 style='text-align: center; color: #ffffff;'>AVISO DE ATRASO</h3>
             <div class='texto'>
-            Estimado/a nombre empelado, nos ponemos en contacto con usted en relacion a la indicendia de
+            Estimado/a ". $empleado .", nos ponemos en contacto con usted en relacion a la indicendia de
             atraso registrada en la siguiente fecha:
             <br>
             <br>
             <ul>
-              <li><b>Fecha: </b> fecha del atraso</li>
-              <li><b>Motivo:</b> descripcion</li>
-              <li><b>Tiempo de atraso:</b> tiempo min(s)</li>
+              <li><b>Fecha: </b> ".$fecha_atr."</li>
+              <li><b>Motivo:</b> ".$descripcion_atr."</li>
+              <li><b>Tiempo de atraso: </b>".$tiempo_atr." (mins)</li>
             </ul>
             <br>
             <br>

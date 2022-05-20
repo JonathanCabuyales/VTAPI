@@ -82,4 +82,4 @@ try {
 }
 
 header("Content-Type: application/json; charset=UTF-8");
-echo json_encode($data_insert);
+echo json_encode($data_insert, JSON_UNESCAPED_UNICODE);

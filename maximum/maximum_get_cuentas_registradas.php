@@ -1,5 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header('Content-Type: text/html; charset=UTF-8'); 
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Content-Type: application/json');
 
@@ -17,7 +18,7 @@ if ($get) {
     $array = array();
     while ($fila = mysqli_fetch_assoc($get) ) {	
         // echo json_encode($fila);
-        $data[] = array_map('utf8_encode', $fila);
+        $data[] = $fila;
     }
 }else{
     echo "fallo no hay nada";
@@ -27,5 +28,5 @@ if ($get) {
 
 $res = $data;
 
-echo json_encode($res); 
+echo json_encode($res, JSON_UNESCAPED_UNICODE); 
 echo mysqli_error($con);

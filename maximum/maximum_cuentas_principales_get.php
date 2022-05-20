@@ -64,4 +64,4 @@ $res = $data;
     
 }
 
-echo json_encode($data_insert);
+echo json_encode($data_insert, JSON_UNESCAPED_UNICODE);

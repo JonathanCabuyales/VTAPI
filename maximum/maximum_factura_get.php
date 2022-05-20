@@ -29,15 +29,15 @@ try {
 
     include ("../conexion/bd.php");
 
-    $get = mysqli_query($con, "SELECT * FROM cuentas_contables_libro");
+    $get = $con->query("SELECT * FROM cuentas_contables_libro");
 
 $data= array();
 
 if ($get) {
     $array = array();
-    while ($fila = mysqli_fetch_assoc($get) ) {	
+    while ($fila = $get->fetch_assoc() ) {	
         // echo json_encode($fila);
-        $data[] = array_map('utf8_encode', $fila);
+        $data[] = $fila;
     }
 }else{
     $res = array();
@@ -64,4 +64,4 @@ $res = $data;
     
 }
 
-echo json_encode($data_insert);
+echo json_encode($data_insert, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);

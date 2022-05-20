@@ -16,15 +16,15 @@ WHERE ag.id_grupo_anexo = '$valor'";
 
 include('../conexion/bd.php');
 
-$result = mysqli_query($con, $query);
+$result = $con->query($query);
 
 $data= array();
 
 if ($result) {
     $array = array();
-    while ($fila = mysqli_fetch_assoc($result) ) {	
+    while ($fila = $result->fetch_assoc() ) {	
         // echo json_encode($fila);
-        $data[] = array_map('utf8_encode', $fila);
+        $data[] = $fila;
     }
 }else{
     $res = array();
@@ -42,5 +42,5 @@ $res = $data;
     );  
 
 
-echo json_encode($data_insert);
+echo json_encode($data_insert, JSON_UNESCAPED_UNICODE);
 
